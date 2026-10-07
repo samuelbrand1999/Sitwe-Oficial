@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+  --font-sans: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-editorial: 'Playfair Display', Georgia, serif;
+  --font-mono: 'Montserrat', sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+  }
+
+  ::selection {
+    background-color: #ffffff;
+    color: #0a0a0a;
+  }
+}
+
+.luxury-pulse-button {
+  animation: elegant-pulse 3.2s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+}
+
+@keyframes elegant-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Luxury ambient drift & architectural light ray animations */
+@keyframes slowDrift1 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.05;
+  }
+  50% {
+    transform: translate3d(60px, 35px, 0) scale(1.12);
+    opacity: 0.09;
+  }
+  100% {
+    transform: translate3d(-30px, 50px, 0) scale(0.95);
+    opacity: 0.06;
+  }
+}
+
+@keyframes slowDrift2 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+    opacity: 0.04;
+  }
+  50% {
+    transform: translate3d(-50px, -40px, 0) scale(0.92);
+    opacity: 0.08;
+  }
+  100% {
+    transform: translate3d(40px, -20px, 0) scale(1.1);
+    opacity: 0.05;
+  }
+}
+
+@keyframes slowShimmerRay {
+  0% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.4;
+  }
+  35% {
+    opacity: 0.7;
+  }
+  55% {
+    opacity: 0.2;
+  }
+  75%, 100% {
+    transform: translateY(220%);
+    opacity: 0;
+  }
+}
+
+.animate-drift-slow-1 {
+  animation: slowDrift1 26s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  will-change: transform, opacity;
+}
+
+.animate-drift-slow-2 {
+  animation: slowDrift2 32s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  will-change: transform, opacity;
+}
+
+.animate-shimmer-ray {
+  animation: slowShimmerRay 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+/* Luxury Button Satin Sheen & Ambient Presence */
+@keyframes buttonSheen {
+  0% {
+    transform: translateX(-180%) skewX(-20deg);
+    opacity: 0;
+  }
+  2% {
+    opacity: 0.8;
+  }
+  16% {
+    transform: translateX(280%) skewX(-20deg);
+    opacity: 0.8;
+  }
+  17%, 100% {
+    transform: translateX(280%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes buttonHalo {
+  0%, 100% {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 16px 1px rgba(255, 255, 255, 0.14);
+  }
+}
+
+.btn-sheen {
+  position: relative;
+  overflow: hidden;
+  animation: buttonHalo 6.5s ease-in-out infinite;
+}
+
+.btn-sheen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 25%,
+    rgba(0, 0, 0, 0.08) 50%,
+    rgba(255, 255, 255, 0.7) 75%,
+    transparent 100%
+  );
+  pointer-events: none;
+  animation: buttonSheen 6.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+/* Micro-movement on arrow in sync with the light sweep */
+@keyframes arrowSubtle {
+  0%, 11% {
+    transform: translate(0, 0);
+  }
+  14% {
+    transform: translate(1.5px, -1.5px);
+  }
+  18%, 100% {
+    transform: translate(0, 0);
+  }
+}
+
+.btn-sheen .arrow-subtle {
+  animation: arrowSubtle 6.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #262626;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #404040;
+}
+
+/* Lenis Smooth Scroll */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Custom Minimalist Circle Cursor (Desktop / Fine Pointer) */
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}

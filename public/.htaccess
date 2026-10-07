@@ -1,0 +1,112 @@
+# ==============================================================================
+# Otimização de Hospedagem HostGator (cPanel / Apache)
+# Dantes Brandão | Web Designer (SPA React + Vite)
+# ==============================================================================
+
+# 1. Desabilitar listagem de diretórios por segurança
+Options -Indexes
+
+# 2. Tipos MIME para formatos modernos (WebP, WOFF2, MP4, JSON)
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType font/woff2 .woff2
+  AddType font/woff .woff
+  AddType video/mp4 .mp4
+  AddType application/json .json
+  AddType application/manifest+json .webmanifest
+  AddType text/javascript .js
+  AddType text/css .css
+</IfModule>
+
+# 3. Forçar HTTPS e Roteamento SPA (Single Page Application)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Forçar conexão segura HTTPS na HostGator
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Se o arquivo ou diretório físico existir no servidor, sirva-o diretamente
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Se não existir (ex: rotas internas ou recarregamento), redireciona para index.html
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Fallback para erro 404
+ErrorDocument 404 /index.html
+
+# 4. Compactação GZIP / Deflate para reduzir consumo de banda
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE image/x-icon
+  AddOutputFilterByType DEFLATE font/ttf
+  AddOutputFilterByType DEFLATE font/otf
+  AddOutputFilterByType DEFLATE font/woff
+  AddOutputFilterByType DEFLATE font/woff2
+</IfModule>
+
+# 5. Políticas de Cache no Navegador (Browser Caching)
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # index.html nunca deve ficar preso em cache permanente (garante atualizações instantâneas)
+  ExpiresByType text/html "access plus 0 seconds"
+
+  # Arquivos com hash do Vite (JS e CSS) - 1 ano de cache
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+
+  # Imagens e Mídia
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 1 month"
+
+  # Fontes
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+
+  # Outros
+  ExpiresDefault "access plus 2 days"
+</IfModule>
+
+# 6. Cabeçalhos de Cache refinados e Segurança HTTP
+<IfModule mod_headers.c>
+  # index.html revalidado sempre
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+  </FilesMatch>
+
+  # Assets compilados imutáveis (com hash no nome do arquivo)
+  <FilesMatch "\.(js|css|webp|woff2|woff)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Cabeçalhos de Segurança essenciais
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>

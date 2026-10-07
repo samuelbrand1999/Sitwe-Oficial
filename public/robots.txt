@@ -1,0 +1,6 @@
+# Robots.txt for Dantes Brandão | Web Designer
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://dantesbrandao.com.br/sitemap.xml
